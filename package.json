@@ -15,10 +15,12 @@
     "docker:down": "docker-compose down",
     "docker:start": "docker-compose up -d",
     "docker:start:invoice": "docker-compose up -d invoice-api",
+    "docker:start:kafka": "docker-compose up -d broker schema-registry connect rest-proxy",
     "docker:start:order": "docker-compose up -d order-api",
     "docker:start:shipment": "docker-compose up -d shipment-api",
     "docker:stop": "docker-compose stop",
     "docker:stop:invoice": "docker-compose stop invoice-api",
+    "docker:stop:kafka": "docker-compose stop broker schema-registry connect rest-proxy",
     "docker:stop:order": "docker-compose stop order-api",
     "docker:stop:shipment": "docker-compose stop shipment-api",
     "test": "lerna exec --parallel -- yarn test"
