@@ -1,0 +1,29 @@
+{
+  "name": "kafka-playground",
+  "author": "Joshua Nathaniel Miller",
+  "private": true,
+  "license": "MIT",
+  "version": "0.0.0",
+  "workspaces": [
+    "apis/*"
+  ],
+  "scripts": {
+    "build": "lerna exec --parallel -- yarn build",
+    "docker:build:invoice": "docker-compose up -d invoice-api --build",
+    "docker:build:order": "docker-compose up -d order-api --build",
+    "docker:build:shipment": "docker-compose up -d shipment-api --build",
+    "docker:down": "docker-compose down",
+    "docker:start": "docker-compose up -d",
+    "docker:start:invoice": "docker-compose up -d invoice-api",
+    "docker:start:order": "docker-compose up -d order-api",
+    "docker:start:shipment": "docker-compose up -d shipment-api",
+    "docker:stop": "docker-compose stop",
+    "docker:stop:invoice": "docker-compose stop invoice-api",
+    "docker:stop:order": "docker-compose stop order-api",
+    "docker:stop:shipment": "docker-compose stop shipment-api",
+    "test": "lerna exec --parallel -- yarn test"
+  },
+  "devDependencies": {
+    "lerna": "^4.0.0"
+  }
+}

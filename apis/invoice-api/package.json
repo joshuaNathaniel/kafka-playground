@@ -1,0 +1,27 @@
+{
+  "name": "invoice-api",
+  "version": "1.0.0",
+  "description": "This project was bootstrapped with Fastify-CLI.",
+  "main": "app.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "tap \"test/**/*.test.js\"",
+    "start": "TOPIC=${TOPIC:-INVOICE} KAFKA_BOOTSTRAP_SERVER=${KAFKA_BOOTSTRAP_SERVER:-localhost:9092} fastify start -l info app.js -p ${PORT:3001}",
+    "dev": "TOPIC=${TOPIC:-INVOICE} KAFKA_BOOTSTRAP_SERVER=${KAFKA_BOOTSTRAP_SERVER:-localhost:9092} fastify start -w -l info -P app.js -p ${PORT:3001}"
+  },
+  "keywords": [],
+  "author": "Joshua Nathaniel Miller",
+  "license": "ISC",
+  "dependencies": {
+    "fastify": "^3.0.0",
+    "fastify-plugin": "^3.0.0",
+    "fastify-autoload": "^3.10.0",
+    "fastify-sensible": "^3.1.2",
+    "fastify-cli": "^2.15.0"
+  },
+  "devDependencies": {
+    "tap": "^15.1.6"
+  }
+}
