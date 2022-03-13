@@ -9,6 +9,7 @@
         "quantity",
         "customerName",
         "customerAddress",
+        "shipped",
         "createdAt",
         "updatedAt"
       ],
@@ -27,6 +28,9 @@
         },
         "customerAddress": {
           "type": "string"
+        },
+        "shipped": {
+          "type": "boolean"
         },
         "createdAt": {
           "type": "string"
