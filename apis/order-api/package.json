@@ -8,7 +8,7 @@
   },
   "scripts": {
     "test": "tap \"test/**/*.test.js\"",
-    "start": "fastify start -l info app.js -p ${PORT}",
+    "start": "yarn migrate && fastify start -l info app.js -p ${PORT}",
     "dev": "fastify start -w -l info -P app.js -p ${PORT}",
     "migrate": "npx prisma migrate dev --schema=./prisma/schema.prisma --name initial"
   },
@@ -23,7 +23,8 @@
     "fastify-cli": "^2.15.0",
     "fastify-plugin": "^3.0.0",
     "fastify-sensible": "^3.1.2",
-    "kafkajs": "^1.16.0"
+    "kafkajs": "^1.16.0",
+    "prisma": "^3.10.0"
   },
   "devDependencies": {
     "tap": "^15.1.6"

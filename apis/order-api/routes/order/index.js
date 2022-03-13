@@ -1,31 +1,19 @@
 'use strict';
-const {kafka, registry} = require('../../services/kafka');
-const prisma = require('../../services/prisma');
-
-const producer = kafka.producer();
+const {produceOrderCreated} = require('../../services/kafka');
+const {createNewOrder, fi} = require('../../services/prisma');
+const {findOrderById} = require('../../services/prisma.js');
 
 module.exports = async function (fastify, opts) {
-  await producer.connect();
+  fastify.get('/:id', async (request, reply) => ({
+    order: await findOrderById(request.params.id)
+  }));
 
   fastify.post('/', async function (request, reply) {
-    let order = await prisma.order.create({
-      data: request.body
-    });
+    let order = await createNewOrder(request.body);
+    await produceOrderCreated(order);
 
-    let {id, ...orderStuff} = order;
-    console.log('id', opts.kafka.schema.orderId);
-
-    const responses = await producer.send({
-      topic: process.env.TOPIC,
-      messages: [{
-        key: `${process.env.TOPIC}_CREATED_${order.id}`,
-        value: await registry.encode(opts.kafka.schema.orderId, JSON.stringify(orderStuff))
-      }]
-    });
-
-    return responses.map(response => ({
-      eventId: response.baseOffset,
-      ...orderStuff
-    }))[0];
+    return {
+      order
+    };
   });
 };

@@ -2,6 +2,8 @@ version: '2'
 services:
   postgres:
     image: postgres:14.2
+    hostname: postgres
+    container_name: postgres
     ports:
       - "5432:5432"
     environment:
@@ -12,11 +14,15 @@ services:
     build:
       context: apis/order-api
       dockerfile: Dockerfile
+    hostname: order-api
+    container_name: order-api
     ports:
       - "3000:3000"
     environment:
+      DATABASE_URL: postgresql://kafka:kafka@postgres:5432/kafka?schema=order
       KAFKA_BOOTSTRAP_SERVER: broker:29092
-      TOPIC: ORDER
+      KAFKA_SCHEMA_REGISTRY_HOST: http://schema-registry:8081
+      PUBLISH_TOPIC: ORDER
       PORT: 3000
     depends_on:
       - postgres
@@ -25,11 +31,16 @@ services:
     build:
       context: apis/invoice-api
       dockerfile: Dockerfile
+    hostname: invoice-api
+    container_name: invoice-api
     ports:
       - "3001:3001"
     environment:
+      DATABASE_URL: postgresql://kafka:kafka@postgres:5432/kafka?schema=invoice
+      KAFKA_SCHEMA_REGISTRY_HOST: http://schema-registry:8081
       KAFKA_BOOTSTRAP_SERVER: broker:29092
-      TOPIC: INVOICE
+      PUBLISH_TOPIC: INVOICE
+      CONSUMER_TOPIC: ORDER
       PORT: 3001
     depends_on:
       - postgres
