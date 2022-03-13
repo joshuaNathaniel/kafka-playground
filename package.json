@@ -9,6 +9,7 @@
   ],
   "scripts": {
     "build": "lerna exec --parallel -- yarn build",
+    "docker:build:apis": "docker-compose up -d invoice-api order-api shipment-api --build",
     "docker:build:invoice": "docker-compose up -d invoice-api --build",
     "docker:build:order": "docker-compose up -d order-api --build",
     "docker:build:shipment": "docker-compose up -d shipment-api --build",

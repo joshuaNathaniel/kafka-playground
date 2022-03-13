@@ -26,6 +26,7 @@ services:
       PORT: 3000
     depends_on:
       - postgres
+      - schema-registry
 
   invoice-api:
     build:
@@ -44,19 +45,26 @@ services:
       PORT: 3001
     depends_on:
       - postgres
+      - schema-registry
 
   shipment-api:
     build:
       context: apis/shipment-api
       dockerfile: Dockerfile
+    hostname: shipment-api
+    container_name: shipment-api
     ports:
       - "3002:3002"
     environment:
+      DATABASE_URL: postgresql://kafka:kafka@postgres:5432/kafka?schema=shipment
+      KAFKA_SCHEMA_REGISTRY_HOST: http://schema-registry:8081
       KAFKA_BOOTSTRAP_SERVER: broker:29092
-      TOPIC: SHIPMENT
+      PUBLISH_TOPIC: SHIPMENT
+      CONSUMER_TOPIC: ORDER
       PORT: 3002
     depends_on:
       - postgres
+      - schema-registry
 
   broker:
     image: confluentinc/cp-kafka:7.0.1

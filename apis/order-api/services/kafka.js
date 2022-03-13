@@ -1,6 +1,7 @@
 const {Kafka} = require('kafkajs');
 const {SchemaRegistry, SchemaType} = require('@kafkajs/confluent-schema-registry');
 const schema = require('../kafka/schema/order.json');
+const {updateOrder} = require('./prisma.js');
 
 const {KAFKA_USERNAME: username, KAFKA_PASSWORD: password} = process.env;
 const sasl = username && password ? {username, password, mechanism: 'plain'} : null;
@@ -15,6 +16,7 @@ const kafka = new Kafka({
 
 const admin = kafka.admin();
 const producer = kafka.producer();
+const consumer = kafka.consumer({groupId: process.env.CONSUMER_TOPIC});
 
 const registry = new SchemaRegistry(
     {
@@ -44,6 +46,7 @@ const createTopic = async () => {
 };
 
 const produceOrderCreated = async (order) => {
+  console.log('Producing order created message');
   await producer.connect();
   const responses = await producer.send({
     topic: process.env.PUBLISH_TOPIC,
@@ -67,10 +70,26 @@ const registerOrderSchema = async () =>
           subject: 'record:Order'
         });
 
+const subscribeToTopic = async () => {
+  await consumer.connect();
+  await consumer.subscribe({topic: process.env.CONSUMER_TOPIC});
+  await consumer.run({
+    eachMessage: async ({topic, partition, message}) => {
+      const shipment = JSON.parse(await registry.decode(message.value));
+
+      console.log('Received message: ', shipment);
+      await updateOrder(shipment.orderId, {
+        shipped: true
+      });
+    }
+  });
+};
+
 module.exports = {
   kafka,
   registry,
   createTopic,
   produceOrderCreated,
-  registerOrderSchema
+  registerOrderSchema,
+  subscribeToTopic
 };

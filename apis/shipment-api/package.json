@@ -8,19 +8,23 @@
   },
   "scripts": {
     "test": "tap \"test/**/*.test.js\"",
-    "start": "TOPIC=${TOPIC:-SHIPMENT} KAFKA_BOOTSTRAP_SERVER=${KAFKA_BOOTSTRAP_SERVER:-localhost:9092} fastify start -l info app.js -p ${PORT:3002}",
-    "dev": "TOPIC=${TOPIC:-SHIPMENT} KAFKA_BOOTSTRAP_SERVER=${KAFKA_BOOTSTRAP_SERVER:-localhost:9092} fastify start -w -l info -P app.js -p ${PORT:3002}",
-    "migrate": "echo \"Migrating shipment schema...\""
+    "start": "yarn migrate && fastify start -l info app.js -p ${PORT}",
+    "dev": "fastify start -w -l info -P app.js -p ${PORT} --plugin-timeout 0",
+    "migrate": "npx prisma migrate dev --schema=./prisma/schema.prisma --name initial"
   },
   "keywords": [],
   "author": "Joshua Nathaniel Miller",
   "license": "ISC",
   "dependencies": {
+    "@kafkajs/confluent-schema-registry": "^3.2.1",
+    "@prisma/client": "^3.10.0",
     "fastify": "^3.0.0",
-    "fastify-plugin": "^3.0.0",
     "fastify-autoload": "^3.10.0",
+    "fastify-cli": "^2.15.0",
+    "fastify-plugin": "^3.0.0",
     "fastify-sensible": "^3.1.2",
-    "fastify-cli": "^2.15.0"
+    "kafkajs": "^1.16.0",
+    "prisma": "^3.10.0"
   },
   "devDependencies": {
     "tap": "^15.1.6"

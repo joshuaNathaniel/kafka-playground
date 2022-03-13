@@ -1,0 +1,21 @@
+{
+  "definitions": {
+    "record:Order": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "orderId",
+        "pdf"
+      ],
+      "properties": {
+        "id": {
+          "type": "number"
+        },
+        "orderId": {
+          "type": "number"
+        }
+      }
+    }
+  }
+}

@@ -10,7 +10,6 @@ module.exports = async function (fastify, opts) {
 
   fastify.post('/', {
      handler: async function (request, reply) {
-       console.log('body', request.body);
        let order = await createNewOrder(request.body);
        await produceOrderCreated(order);
 

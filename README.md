@@ -16,6 +16,8 @@ curl -X POST -H "Content-Type: application/json" localhost:3000/order -d "{
 }"
 # Some json should be returned with the orderId
 curl localhost:3001/invoice/:orderId 
+# Check the order shipped status is now true
+curl localhost:3000/order/:id 
 ```
 
 ## Development
