@@ -35,7 +35,7 @@ const createTopic = async () => {
   await admin.createTopics({
     topics: [
       {
-        topic: process.env.PUBLISH_TOPIC,
+        topic: process.env.PUBLISHER_TOPIC,
         numPartitions: 1,
         replicationFactor: 1
       }
@@ -48,9 +48,9 @@ const createTopic = async () => {
 const produceShipmentCreated = async (shipment) => {
   await producer.connect();
   const responses = await producer.send({
-    topic: process.env.PUBLISH_TOPIC,
+    topic: process.env.PUBLISHER_TOPIC,
     messages: [{
-      key: `${process.env.PUBLISH_TOPIC}_CREATED_${shipment.id}`,
+      key: `${process.env.PUBLISHER_TOPIC}_CREATED_${shipment.id}`,
       value: await registry.encode(invoiceRegistrySchema.id, JSON.stringify(shipment))
     }]
   });

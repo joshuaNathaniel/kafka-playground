@@ -22,7 +22,8 @@ services:
       DATABASE_URL: postgresql://kafka:kafka@postgres:5432/kafka?schema=order
       KAFKA_BOOTSTRAP_SERVER: broker:29092
       KAFKA_SCHEMA_REGISTRY_HOST: http://schema-registry:8081
-      PUBLISH_TOPIC: ORDER
+      PUBLISHER_TOPIC: ORDER
+      CONSUMER_TOPIC: SHIPMENT
       PORT: 3000
     depends_on:
       - postgres
@@ -40,7 +41,7 @@ services:
       DATABASE_URL: postgresql://kafka:kafka@postgres:5432/kafka?schema=invoice
       KAFKA_SCHEMA_REGISTRY_HOST: http://schema-registry:8081
       KAFKA_BOOTSTRAP_SERVER: broker:29092
-      PUBLISH_TOPIC: INVOICE
+      PUBLISHER_TOPIC: INVOICE
       CONSUMER_TOPIC: ORDER
       PORT: 3001
     depends_on:
@@ -59,7 +60,7 @@ services:
       DATABASE_URL: postgresql://kafka:kafka@postgres:5432/kafka?schema=shipment
       KAFKA_SCHEMA_REGISTRY_HOST: http://schema-registry:8081
       KAFKA_BOOTSTRAP_SERVER: broker:29092
-      PUBLISH_TOPIC: SHIPMENT
+      PUBLISHER_TOPIC: SHIPMENT
       CONSUMER_TOPIC: ORDER
       PORT: 3002
     depends_on:
