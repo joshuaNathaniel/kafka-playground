@@ -7,8 +7,15 @@ The playground is a quick demo of event driven microservices using Kafka by way 
 ```shell
 # Start docker containers
 yarn docker:start
+# Migrate database
+yarn migrate
 # Send an order
-curl -X POST -H "Content-Type: application/json" localhost:3000/order -d "{}"
+curl -X POST -H "Content-Type: application/json" localhost:3000/order -d "{
+  \"quantity\": 1,
+  \"productId\": 12345,
+  \"customerName\": \"Foo Bar\",
+  \"customerAddress\": \"123 Main St, Anytown, CA 12345\"
+}"
 ```
 
 ## Development

@@ -1,5 +1,13 @@
 version: '2'
 services:
+  postgres:
+    image: postgres:14.2
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: kafka
+      POSTGRES_PASSWORD: kafka
+
   order-api:
     build:
       context: apis/order-api
@@ -10,6 +18,8 @@ services:
       KAFKA_BOOTSTRAP_SERVER: broker:29092
       TOPIC: ORDER
       PORT: 3000
+    depends_on:
+      - postgres
 
   invoice-api:
     build:
@@ -21,6 +31,8 @@ services:
       KAFKA_BOOTSTRAP_SERVER: broker:29092
       TOPIC: INVOICE
       PORT: 3001
+    depends_on:
+      - postgres
 
   shipment-api:
     build:
@@ -32,6 +44,8 @@ services:
       KAFKA_BOOTSTRAP_SERVER: broker:29092
       TOPIC: SHIPMENT
       PORT: 3002
+    depends_on:
+      - postgres
 
   broker:
     image: confluentinc/cp-kafka:7.0.1

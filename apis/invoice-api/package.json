@@ -9,7 +9,8 @@
   "scripts": {
     "test": "tap \"test/**/*.test.js\"",
     "start": "TOPIC=${TOPIC:-INVOICE} KAFKA_BOOTSTRAP_SERVER=${KAFKA_BOOTSTRAP_SERVER:-localhost:9092} fastify start -l info app.js -p ${PORT:3001}",
-    "dev": "TOPIC=${TOPIC:-INVOICE} KAFKA_BOOTSTRAP_SERVER=${KAFKA_BOOTSTRAP_SERVER:-localhost:9092} fastify start -w -l info -P app.js -p ${PORT:3001}"
+    "dev": "TOPIC=${TOPIC:-INVOICE} KAFKA_BOOTSTRAP_SERVER=${KAFKA_BOOTSTRAP_SERVER:-localhost:9092} fastify start -w -l info -P app.js -p ${PORT:3001}",
+    "migrate": "echo \"Migrating invoice schema...\""
   },
   "keywords": [],
   "author": "Joshua Nathaniel Miller",
