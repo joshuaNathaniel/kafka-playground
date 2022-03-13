@@ -2,13 +2,23 @@
 
 const path = require('path');
 const AutoLoad = require('fastify-autoload');
-const kafka = require('./services/kafka');
+const {kafka, registry} = require('./services/kafka');
+const {SchemaType} = require('@kafkajs/confluent-schema-registry');
+const schema = require('./kafka/schema/order.json');
 
 const admin = kafka.admin();
 
 module.exports = async function (fastify, opts) {
-  // Place here your custom code!
-  await admin.connect()
+  const {id} = await registry.register(
+      {
+        type: SchemaType.JSON,
+        schema: JSON.stringify(schema)
+      },
+      {
+        subject: 'record:Order'
+      });
+
+  await admin.connect();
   await admin.createTopics({
     topics: [
       {
@@ -22,6 +32,12 @@ module.exports = async function (fastify, opts) {
   // define your routes in one of these
   fastify.register(AutoLoad, {
     dir: path.join(__dirname, 'routes'),
-    options: Object.assign({}, opts)
+    options: Object.assign({
+      kafka: {
+        schema: {
+          orderId: id
+        }
+      }
+    }, opts)
   });
 };

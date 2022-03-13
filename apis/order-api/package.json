@@ -8,23 +8,22 @@
   },
   "scripts": {
     "test": "tap \"test/**/*.test.js\"",
-    "start": "TOPIC=${TOPIC:-ORDER} KAFKA_BOOTSTRAP_SERVER=${KAFKA_BOOTSTRAP_SERVER:-localhost:9092} fastify start -l info app.js -p ${PORT:3000}",
-    "dev": "TOPIC=${TOPIC:-ORDER} KAFKA_BOOTSTRAP_SERVER=${KAFKA_BOOTSTRAP_SERVER:-localhost:9092} fastify start -w -l info -P app.js -p ${PORT:3000}",
-    "migrate": "npx prisma migrate dev --schema=./prisma/schema.prisma --name initial",
-    "generate": "npx prisma generate"
+    "start": "fastify start -l info app.js -p ${PORT}",
+    "dev": "fastify start -w -l info -P app.js -p ${PORT}",
+    "migrate": "npx prisma migrate dev --schema=./prisma/schema.prisma --name initial"
   },
   "keywords": [],
   "author": "Joshua Nathaniel Miller",
   "license": "MIT",
   "dependencies": {
+    "@kafkajs/confluent-schema-registry": "^3.2.1",
     "@prisma/client": "^3.10.0",
     "fastify": "^3.0.0",
     "fastify-autoload": "^3.10.0",
     "fastify-cli": "^2.15.0",
     "fastify-plugin": "^3.0.0",
     "fastify-sensible": "^3.1.2",
-    "kafkajs": "^1.16.0",
-    "uuid": "^8.3.2"
+    "kafkajs": "^1.16.0"
   },
   "devDependencies": {
     "tap": "^15.1.6"

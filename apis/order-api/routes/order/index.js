@@ -1,28 +1,31 @@
-'use strict'
-const kafka = require('../../services/kafka')
-const prisma = require('../../services/prisma')
+'use strict';
+const {kafka, registry} = require('../../services/kafka');
+const prisma = require('../../services/prisma');
 
-const producer = kafka.producer()
+const producer = kafka.producer();
 
 module.exports = async function (fastify, opts) {
-  await producer.connect()
+  await producer.connect();
 
   fastify.post('/', async function (request, reply) {
-    const order = await prisma.order.create({
+    let order = await prisma.order.create({
       data: request.body
     });
+
+    let {id, ...orderStuff} = order;
+    console.log('id', opts.kafka.schema.orderId);
 
     const responses = await producer.send({
       topic: process.env.TOPIC,
       messages: [{
         key: `${process.env.TOPIC}_CREATED_${order.id}`,
-        value: JSON.stringify(order)
+        value: await registry.encode(opts.kafka.schema.orderId, JSON.stringify(orderStuff))
       }]
-    })
+    });
 
     return responses.map(response => ({
       eventId: response.baseOffset,
-      ...order
-    }))[0]
-  })
-}
+      ...orderStuff
+    }))[0];
+  });
+};

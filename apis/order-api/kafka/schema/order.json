@@ -1,0 +1,40 @@
+{
+  "definitions": {
+    "record:Order": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "productId",
+        "quantity",
+        "customerName",
+        "customerAddress",
+        "createdAt",
+        "updatedAt"
+      ],
+      "properties": {
+        "id": {
+          "type": "number"
+        },
+        "productId": {
+          "type": "number"
+        },
+        "quantity": {
+          "type": "number"
+        },
+        "customerName": {
+          "type": "string"
+        },
+        "customerAddress": {
+          "type": "string"
+        },
+        "createdAt": {
+          "type": "string"
+        },
+        "updatedAt": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}
