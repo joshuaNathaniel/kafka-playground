@@ -26,3 +26,7 @@ yarn install
 
 # See root package.json for docker scripts to easily run the needed containers
 ```
+
+## Credit
+- [Building Event-Driven Microservices](https://learning.oreilly.com/library/view/building-event-driven-microservices/9781492057888/)
+- [Confluent](https://www.confluent.io/)
