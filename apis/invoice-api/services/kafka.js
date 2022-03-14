@@ -16,7 +16,7 @@ const kafka = new Kafka({
 
 const admin = kafka.admin();
 const producer = kafka.producer();
-const consumer = kafka.consumer({groupId: process.env.CONSUMER_TOPIC});
+const consumer = kafka.consumer({groupId: `${process.env.CONSUMER_TOPIC}-${process.env.PUBLISHER_TOPIC}`});
 
 const registry = new SchemaRegistry(
     {

@@ -1,4 +1,4 @@
-version: '2'
+version: '2.4'
 services:
   postgres:
     image: postgres:14.2
@@ -9,6 +9,11 @@ services:
     environment:
       POSTGRES_USER: kafka
       POSTGRES_PASSWORD: kafka
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready" ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
 
   order-api:
     build:
@@ -16,6 +21,7 @@ services:
       dockerfile: Dockerfile
     hostname: order-api
     container_name: order-api
+    restart: unless-stopped
     ports:
       - "3000:3000"
     environment:
@@ -26,8 +32,10 @@ services:
       CONSUMER_TOPIC: SHIPMENT
       PORT: 3000
     depends_on:
-      - postgres
-      - schema-registry
+      postgres:
+        condition: service_healthy
+      schema-registry:
+        condition: service_started
 
   invoice-api:
     build:
@@ -35,6 +43,7 @@ services:
       dockerfile: Dockerfile
     hostname: invoice-api
     container_name: invoice-api
+    restart: unless-stopped
     ports:
       - "3001:3001"
     environment:
@@ -45,8 +54,10 @@ services:
       CONSUMER_TOPIC: ORDER
       PORT: 3001
     depends_on:
-      - postgres
-      - schema-registry
+      postgres:
+        condition: service_healthy
+      schema-registry:
+        condition: service_started
 
   shipment-api:
     build:
@@ -54,6 +65,7 @@ services:
       dockerfile: Dockerfile
     hostname: shipment-api
     container_name: shipment-api
+    restart: unless-stopped
     ports:
       - "3002:3002"
     environment:
@@ -64,8 +76,10 @@ services:
       CONSUMER_TOPIC: ORDER
       PORT: 3002
     depends_on:
-      - postgres
-      - schema-registry
+      postgres:
+        condition: service_healthy
+      schema-registry:
+        condition: service_started
 
   broker:
     image: confluentinc/cp-kafka:7.0.1
@@ -140,7 +154,7 @@ services:
       - broker
       - schema-registry
     ports:
-      - 8082:8082
+      - "8082:8082"
     hostname: rest-proxy
     container_name: rest-proxy
     environment:

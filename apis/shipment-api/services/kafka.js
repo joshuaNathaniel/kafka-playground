@@ -16,7 +16,7 @@ const kafka = new Kafka({
 
 const admin = kafka.admin();
 const producer = kafka.producer();
-const consumer = kafka.consumer({groupId: process.env.CONSUMER_TOPIC});
+const consumer = kafka.consumer({groupId: `${process.env.CONSUMER_TOPIC}-${process.env.PUBLISHER_TOPIC}`});
 
 const registry = new SchemaRegistry(
     {
@@ -70,12 +70,10 @@ const registerShipmentSchema = async () =>
         });
 
 const subscribeToTopic = async () => {
-  console.log('subscribing to topic');
   await consumer.connect();
   await consumer.subscribe({topic: process.env.CONSUMER_TOPIC});
   await consumer.run({
     eachMessage: async ({topic, partition, message}) => {
-      console.log('eachMessage');
       const order = JSON.parse(await registry.decode(message.value));
       const shipment = await createNewShipment({
         orderId: order.id
