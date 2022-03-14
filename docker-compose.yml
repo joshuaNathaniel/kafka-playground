@@ -1,19 +1,19 @@
 version: '2.4'
 services:
-  postgres:
+  order-api-db:
     image: postgres:14.2
-    hostname: postgres
-    container_name: postgres
+    hostname: order-api-db
+    container_name: order-api-db
     ports:
       - "5432:5432"
-    environment:
-      POSTGRES_USER: kafka
-      POSTGRES_PASSWORD: kafka
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready" ]
       interval: 10s
       timeout: 5s
       retries: 10
+    environment:
+      POSTGRES_USER: kafka
+      POSTGRES_PASSWORD: kafka
 
   order-api:
     build:
@@ -25,17 +25,33 @@ services:
     ports:
       - "3000:3000"
     environment:
-      DATABASE_URL: postgresql://kafka:kafka@postgres:5432/kafka?schema=public
+      DATABASE_URL: postgresql://kafka:kafka@order-api-db:5432/kafka?schema=public
       KAFKA_BOOTSTRAP_SERVER: broker:29092
       KAFKA_SCHEMA_REGISTRY_HOST: http://schema-registry:8081
       PUBLISHER_TOPIC: ORDER
       CONSUMER_TOPIC: SHIPMENT
       PORT: 3000
     depends_on:
-      postgres:
+      order-api-db:
         condition: service_healthy
       schema-registry:
         condition: service_started
+
+  invoice-api-db:
+    image: postgres:14.2
+    hostname: invoice-api-db
+    container_name: invoice-api-db
+    ports:
+      - "5433:5433"
+    command: -p 5433
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready" ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    environment:
+      POSTGRES_USER: kafka
+      POSTGRES_PASSWORD: kafka
 
   invoice-api:
     build:
@@ -47,17 +63,33 @@ services:
     ports:
       - "3001:3001"
     environment:
-      DATABASE_URL: postgresql://kafka:kafka@postgres:5432/kafka?schema=public
+      DATABASE_URL: postgresql://kafka:kafka@invoice-api-db:5433/kafka?schema=public
       KAFKA_SCHEMA_REGISTRY_HOST: http://schema-registry:8081
       KAFKA_BOOTSTRAP_SERVER: broker:29092
       PUBLISHER_TOPIC: INVOICE
       CONSUMER_TOPIC: ORDER
       PORT: 3001
     depends_on:
-      postgres:
+      invoice-api-db:
         condition: service_healthy
       schema-registry:
         condition: service_started
+
+  shipment-api-db:
+    image: postgres:14.2
+    hostname: shipment-api-db
+    container_name: shipment-api-db
+    ports:
+      - "5434:5434"
+    command: -p 5434
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready" ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    environment:
+      POSTGRES_USER: kafka
+      POSTGRES_PASSWORD: kafka
 
   shipment-api:
     build:
@@ -69,14 +101,14 @@ services:
     ports:
       - "3002:3002"
     environment:
-      DATABASE_URL: postgresql://kafka:kafka@postgres:5432/kafka?schema=public
+      DATABASE_URL: postgresql://kafka:kafka@shipment-api-db:5434/kafka?schema=public
       KAFKA_SCHEMA_REGISTRY_HOST: http://schema-registry:8081
       KAFKA_BOOTSTRAP_SERVER: broker:29092
       PUBLISHER_TOPIC: SHIPMENT
       CONSUMER_TOPIC: ORDER
       PORT: 3002
     depends_on:
-      postgres:
+      shipment-api-db:
         condition: service_healthy
       schema-registry:
         condition: service_started
