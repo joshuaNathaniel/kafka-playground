@@ -32,3 +32,6 @@ yarn install
 ## Credit
 - [Building Event-Driven Microservices](https://learning.oreilly.com/library/view/building-event-driven-microservices/9781492057888/)
 - [Confluent](https://www.confluent.io/)
+
+## Careers
+Explore new opportunities with [Rise8](https://rise8.us/careers/).
